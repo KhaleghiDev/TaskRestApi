@@ -1,25 +1,23 @@
 package rooter
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"time"
 )
 
 // Rooter  call http and create api restFul
-func Rooter() {
+func Rooter(address string, db *gorm.DB) {
 	router := mux.NewRouter()
 	//start router api
-	router.PathPrefix("/api/v1").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// an example API handler
-		json.NewEncoder(w).Encode(map[string]bool{"ok": true})
-	})
+	Api(router, db)
+
 	srv := &http.Server{
 		Handler: router,
-		Addr:    "127.0.0.1:8000",
+		Addr:    address,
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
